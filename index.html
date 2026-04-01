@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Our Shared Private Photo Album</title>
+  <title>Our Love Album</title>
   <style>
     * {
       margin: 0;
@@ -12,35 +12,26 @@
     }
 
     :root {
-      --bg: #fff9fc;
-      --bg-soft: #fff2f7;
-      --surface: rgba(255, 255, 255, 0.9);
-      --surface-solid: #ffffff;
-      --surface-hover: #fff7fa;
-      --border: rgba(223, 186, 203, 0.55);
-      --border-strong: rgba(214, 100, 150, 0.22);
-      --text: #33212f;
-      --text-soft: #6c5565;
+      --bg-main: #fff8fc;
+      --bg-soft: #fff1f7;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-strong: rgba(255, 255, 255, 0.96);
+      --surface-dark: rgba(255, 255, 255, 0.72);
+      --border: rgba(227, 193, 210, 0.55);
+      --border-strong: rgba(216, 100, 150, 0.18);
+      --text-main: #35202e;
+      --text-soft: #715a69;
       --primary: #d86496;
       --primary-dark: #b94b7b;
       --primary-soft: rgba(216, 100, 150, 0.12);
-      --success: #2f9b64;
-      --shadow-soft: 0 14px 36px rgba(99, 37, 67, 0.08);
-      --shadow-medium: 0 18px 40px rgba(99, 37, 67, 0.12);
-      --radius-xs: 12px;
+      --primary-glow: rgba(216, 100, 150, 0.22);
+      --shadow-soft: 0 16px 40px rgba(97, 38, 67, 0.08);
+      --shadow-medium: 0 22px 48px rgba(97, 38, 67, 0.14);
       --radius-sm: 16px;
-      --radius-md: 20px;
-      --radius-lg: 28px;
-      --radius-xl: 34px;
+      --radius-md: 22px;
+      --radius-lg: 30px;
+      --radius-xl: 38px;
       --content-width: 1200px;
-      --space-1: 8px;
-      --space-2: 12px;
-      --space-3: 16px;
-      --space-4: 20px;
-      --space-5: 24px;
-      --space-6: 32px;
-      --space-7: 40px;
-      --space-8: 56px;
     }
 
     html {
@@ -49,14 +40,15 @@
 
     body {
       font-family: Arial, Helvetica, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(255, 221, 236, 0.5), transparent 24%),
-        radial-gradient(circle at bottom right, rgba(255, 232, 241, 0.65), transparent 28%),
-        linear-gradient(180deg, var(--bg), var(--bg-soft));
+      color: var(--text-main);
+      line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
-      line-height: 1.6;
+      background:
+        radial-gradient(circle at top left, rgba(255, 220, 236, 0.48), transparent 26%),
+        radial-gradient(circle at top right, rgba(255, 239, 246, 0.7), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 226, 239, 0.66), transparent 28%),
+        linear-gradient(180deg, var(--bg-main), var(--bg-soft));
     }
 
     body::before,
@@ -64,62 +56,66 @@
       content: "";
       position: fixed;
       border-radius: 50%;
-      filter: blur(60px);
-      z-index: -1;
-      opacity: 0.5;
+      filter: blur(70px);
       pointer-events: none;
+      z-index: -2;
+      opacity: 0.55;
     }
 
     body::before {
-      width: 280px;
-      height: 280px;
+      width: 300px;
+      height: 300px;
+      left: -90px;
       top: -50px;
-      left: -80px;
-      background: rgba(247, 188, 214, 0.4);
+      background: rgba(248, 189, 214, 0.46);
     }
 
     body::after {
-      width: 320px;
-      height: 320px;
-      right: -90px;
-      bottom: -40px;
-      background: rgba(255, 226, 239, 0.72);
+      width: 340px;
+      height: 340px;
+      right: -100px;
+      bottom: -60px;
+      background: rgba(255, 226, 239, 0.76);
     }
 
     .floating-hearts {
       position: fixed;
       inset: 0;
-      pointer-events: none;
       overflow: hidden;
+      pointer-events: none;
       z-index: -1;
     }
 
     .floating-hearts span {
       position: absolute;
-      top: 100%;
+      top: 105%;
       color: rgba(216, 100, 150, 0.12);
       font-size: 18px;
       animation: floatHeart linear infinite;
       user-select: none;
     }
 
-    .floating-hearts span:nth-child(1) { left: 8%; animation-duration: 18s; animation-delay: 0s; }
-    .floating-hearts span:nth-child(2) { left: 20%; animation-duration: 22s; animation-delay: 4s; }
-    .floating-hearts span:nth-child(3) { left: 34%; animation-duration: 20s; animation-delay: 2s; }
-    .floating-hearts span:nth-child(4) { left: 48%; animation-duration: 24s; animation-delay: 5s; }
+    .floating-hearts span:nth-child(1) { left: 7%; animation-duration: 18s; animation-delay: 0s; }
+    .floating-hearts span:nth-child(2) { left: 18%; animation-duration: 21s; animation-delay: 4s; }
+    .floating-hearts span:nth-child(3) { left: 32%; animation-duration: 20s; animation-delay: 2s; }
+    .floating-hearts span:nth-child(4) { left: 48%; animation-duration: 24s; animation-delay: 6s; }
     .floating-hearts span:nth-child(5) { left: 64%; animation-duration: 19s; animation-delay: 1s; }
-    .floating-hearts span:nth-child(6) { left: 78%; animation-duration: 21s; animation-delay: 6s; }
-    .floating-hearts span:nth-child(7) { left: 90%; animation-duration: 25s; animation-delay: 3s; }
+    .floating-hearts span:nth-child(6) { left: 79%; animation-duration: 22s; animation-delay: 5s; }
+    .floating-hearts span:nth-child(7) { left: 91%; animation-duration: 25s; animation-delay: 3s; }
 
     @keyframes floatHeart {
       from {
         transform: translateY(0) scale(0.8);
         opacity: 0;
       }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
       to {
-        transform: translateY(-118vh) scale(1.25);
+        transform: translateY(-120vh) scale(1.28);
         opacity: 0;
       }
     }
@@ -129,30 +125,50 @@
       margin: 0 auto;
     }
 
-    .top-nav {
+    .top-nav-wrap {
       position: sticky;
       top: 14px;
-      z-index: 60;
+      z-index: 90;
+      padding-top: 18px;
+    }
+
+    .top-nav {
       width: min(var(--content-width), 92%);
-      margin: 18px auto 0;
+      margin: 0 auto;
       padding: 14px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: var(--shadow-soft);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.76);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      box-shadow: var(--shadow-soft);
+      position: relative;
     }
 
     .brand {
-      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       font-weight: 800;
       color: var(--primary);
       letter-spacing: 0.2px;
       white-space: nowrap;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(216, 100, 150, 0.16), rgba(255, 255, 255, 0.9));
+      color: var(--primary-dark);
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(216, 100, 150, 0.12);
     }
 
     .nav-links {
@@ -164,18 +180,20 @@
 
     .nav-links a {
       text-decoration: none;
-      color: var(--text);
+      color: var(--text-main);
       font-weight: 700;
       font-size: 0.95rem;
       padding: 10px 14px;
       border-radius: 999px;
       transition: 0.2s ease;
+      position: relative;
     }
 
     .nav-links a:hover,
-    .nav-links a:focus-visible {
+    .nav-links a:focus-visible,
+    .nav-links a.active {
       background: var(--primary-soft);
-      color: var(--primary);
+      color: var(--primary-dark);
       outline: none;
     }
 
@@ -183,23 +201,23 @@
       display: none;
       width: 46px;
       height: 46px;
-      border: 1px solid rgba(223, 186, 203, 0.45);
-      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(223, 186, 203, 0.5);
+      background: rgba(255, 255, 255, 0.94);
       border-radius: 50%;
       cursor: pointer;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       gap: 5px;
-      flex-shrink: 0;
       box-shadow: var(--shadow-soft);
+      flex-shrink: 0;
     }
 
     .nav-toggle span {
       width: 20px;
       height: 2.5px;
-      background: var(--primary);
       border-radius: 999px;
+      background: var(--primary);
       transition: 0.22s ease;
       display: block;
     }
@@ -217,46 +235,53 @@
     }
 
     .hero {
-      padding: var(--space-8) 0 var(--space-6);
+      padding: 56px 0 28px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: var(--space-5);
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
       align-items: stretch;
     }
 
-    .hero-card,
+    .glass-card,
     .section-card,
-    .footer-card,
-    .quote-band {
+    .quote-band,
+    .footer-card {
       background: var(--surface);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255,255,255,0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
       box-shadow: var(--shadow-soft);
       border-radius: var(--radius-xl);
     }
 
-    .hero-card {
-      padding: 42px;
-      min-height: 440px;
+    .glass-card {
+      padding: 40px;
       position: relative;
       overflow: hidden;
+      min-height: 430px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    .hero-card::before {
+    .glass-card::before {
       content: "";
       position: absolute;
       width: 220px;
       height: 220px;
-      top: -30px;
-      right: -40px;
+      right: -50px;
+      top: -40px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 220, 234, 0.95), rgba(255, 220, 234, 0));
+      background: radial-gradient(circle, rgba(255, 223, 236, 0.96), rgba(255, 223, 236, 0));
+      z-index: 0;
+    }
+
+    .hero-content,
+    .hero-side-content {
+      position: relative;
+      z-index: 1;
     }
 
     .eyebrow {
@@ -265,27 +290,27 @@
       gap: 8px;
       width: fit-content;
       padding: 10px 14px;
-      margin-bottom: 18px;
       border-radius: 999px;
+      margin-bottom: 18px;
       background: var(--primary-soft);
-      color: var(--primary);
+      color: var(--primary-dark);
       font-weight: 800;
       font-size: 0.92rem;
     }
 
-    .hero-card h1 {
-      font-size: clamp(2.2rem, 5vw, 4.3rem);
-      line-height: 1.05;
+    .hero-content h1 {
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      line-height: 1.02;
       max-width: 11ch;
+      letter-spacing: -0.03em;
       margin-bottom: 16px;
-      letter-spacing: -0.02em;
     }
 
-    .hero-card p {
-      color: var(--text-soft);
+    .hero-content p {
       max-width: 620px;
-      line-height: 1.8;
+      color: var(--text-soft);
       font-size: 1.02rem;
+      line-height: 1.8;
     }
 
     .hero-actions {
@@ -296,67 +321,60 @@
     }
 
     .hero-actions a,
-    .auth-btn,
-    .submit-btn,
-    .filter-btn {
+    .filter-btn,
+    .quick-chip {
+      border: none;
       font-weight: 800;
       font-size: 0.95rem;
-      border: none;
-      cursor: pointer;
-      transition: 0.22s ease;
       border-radius: 999px;
+      transition: 0.22s ease;
+      text-decoration: none;
     }
 
-    .hero-actions a,
-    .auth-btn,
-    .submit-btn {
-      text-decoration: none;
+    .hero-actions a {
       padding: 14px 20px;
     }
 
-    .hero-actions a.primary,
-    .auth-btn,
-    .submit-btn {
+    .hero-actions a.primary {
+      color: #fff;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #ffffff;
-      box-shadow: 0 12px 24px rgba(216, 100, 150, 0.24);
+      box-shadow: 0 14px 30px rgba(216, 100, 150, 0.24);
     }
 
     .hero-actions a.secondary {
+      color: var(--text-main);
       background: rgba(255, 255, 255, 0.9);
-      color: var(--text);
       border: 1px solid var(--border);
     }
 
     .hero-actions a:hover,
-    .auth-btn:hover,
-    .submit-btn:hover,
-    .filter-btn:hover {
+    .filter-btn:hover,
+    .quick-chip:hover {
       transform: translateY(-2px);
     }
 
-    .overview-grid {
+    .hero-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       margin-top: 28px;
     }
 
-    .overview-card {
+    .hero-stat {
       padding: 18px;
       border-radius: var(--radius-md);
-      background: rgba(255,255,255,0.76);
-      border: 1px solid rgba(223, 186, 203, 0.35);
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(223, 186, 203, 0.38);
     }
 
-    .overview-card strong {
+    .hero-stat strong {
       display: block;
-      color: var(--primary);
-      font-size: 1.08rem;
+      color: var(--primary-dark);
+      font-size: 1.05rem;
       margin-bottom: 6px;
     }
 
-    .overview-card span {
+    .hero-stat span {
       color: var(--text-soft);
       font-size: 0.93rem;
       line-height: 1.6;
@@ -379,9 +397,9 @@
     .collage-item {
       position: relative;
       overflow: hidden;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, #ffe5ef, #fff7fb);
       min-height: 190px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #ffe5ef, #fff8fb);
       box-shadow: var(--shadow-soft);
     }
 
@@ -399,13 +417,15 @@
 
     .collage-label {
       position: absolute;
-      inset: auto 12px 12px 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
       padding: 12px 14px;
       border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.88);
-      color: var(--text);
-      font-weight: 700;
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(10px);
+      font-weight: 700;
+      color: var(--text-main);
       line-height: 1.5;
     }
 
@@ -420,187 +440,97 @@
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 18px;
+      gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
+    }
+
+    .section-title-wrap {
+      max-width: 740px;
     }
 
     .section-label {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 8px;
       display: inline-block;
-      letter-spacing: 0.02em;
+      font-size: 0.88rem;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
+      color: var(--primary-dark);
+      font-weight: 800;
+      margin-bottom: 8px;
     }
 
     .section-header h2 {
-      font-size: clamp(1.55rem, 3vw, 2.2rem);
-      margin-bottom: 6px;
+      font-size: clamp(1.65rem, 3vw, 2.2rem);
+      line-height: 1.15;
       letter-spacing: -0.02em;
+      margin-bottom: 6px;
     }
 
     .section-header p,
     .section-card p,
     .quote-band p,
-    .feature-card p,
     .memory-box p,
-    .form-helper,
+    .simple-note p,
     .photo-info p,
     .empty-message,
-    .footer-card {
+    .footer-card,
+    .gallery-note {
       color: var(--text-soft);
       line-height: 1.75;
     }
 
+    .section-top-line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(216, 100, 150, 0.16), rgba(216, 100, 150, 0));
+      margin-bottom: 22px;
+    }
+
     .quote-band {
       text-align: center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,241,247,0.96));
+      background: linear-gradient(135deg, rgba(255,255,255,0.94), rgba(255,241,247,0.98));
     }
 
     .quote-band p {
       max-width: 780px;
       margin: 0 auto;
-      font-size: clamp(1.06rem, 2vw, 1.28rem);
+      font-size: clamp(1.08rem, 2vw, 1.28rem);
       font-weight: 700;
-      color: var(--text);
+      color: var(--text-main);
     }
 
-    .feature-grid,
-    .auth-grid,
-    .form-grid,
-    .memory-grid {
-      display: grid;
-      gap: 16px;
+    .memory-ribbon {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
       margin-top: 18px;
     }
 
-    .feature-grid {
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    .quick-chip {
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.8);
+      color: var(--primary-dark);
+      border: 1px solid rgba(223, 186, 203, 0.42);
+      box-shadow: var(--shadow-soft);
     }
 
-    .auth-grid,
-    .form-grid,
-    .memory-grid {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-
-    .feature-card,
-    .memory-box,
-    .info-banner {
-      background: rgba(255,255,255,0.86);
-      border: 1px solid rgba(223, 186, 203, 0.45);
+    .simple-note,
+    .memory-box {
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(223, 186, 203, 0.42);
       border-radius: var(--radius-lg);
       padding: 20px;
       box-shadow: var(--shadow-soft);
     }
 
-    .feature-card h3,
-    .memory-box h4 {
-      margin-bottom: 10px;
-      font-size: 1.05rem;
-    }
-
-    .form-shell {
-      display: grid;
-      gap: 18px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group label {
-      font-weight: 800;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.94);
-      color: var(--text);
-      font-size: 0.96rem;
-      outline: none;
-      transition: 0.18s ease;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: rgba(216, 100, 150, 0.65);
-      box-shadow: 0 0 0 4px rgba(216, 100, 150, 0.12);
-    }
-
-    .form-group textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .info-banner {
-      background: linear-gradient(135deg, rgba(255,248,251,0.95), rgba(255,255,255,0.96));
+    .simple-note {
       margin-top: 18px;
+      display: grid;
+      gap: 10px;
     }
 
-    .status-message {
-      margin-top: 14px;
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1.6;
-    }
-
-    .user-badge {
-      display: inline-flex;
-      align-items: center;
-      margin-top: 14px;
-      padding: 11px 16px;
-      background: rgba(236,255,243,0.95);
-      color: var(--success);
-      border-radius: 999px;
-      border: 1px solid rgba(128, 210, 164, 0.45);
-      font-weight: 800;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin: 18px 0 24px;
-    }
-
-    .filter-btn {
-      padding: 12px 18px;
-      background: rgba(255,255,255,0.92);
-      color: var(--text);
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(223, 186, 203, 0.35);
-    }
-
-    .filter-btn.active,
-    .filter-btn:hover {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      border-color: transparent;
+    .simple-note strong {
+      color: var(--primary-dark);
     }
 
     .picture-grid {
@@ -612,10 +542,21 @@
     .picture-item {
       position: relative;
       height: 198px;
-      border-radius: 22px;
       overflow: hidden;
-      background: linear-gradient(135deg, #ffe5ef, #fff7fb);
+      border-radius: 22px;
       box-shadow: var(--shadow-soft);
+      background: linear-gradient(135deg, #ffe5ef, #fff8fb);
+      isolation: isolate;
+    }
+
+    .picture-item::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 40%;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(53, 32, 46, 0.24));
+      z-index: 1;
+      pointer-events: none;
     }
 
     .picture-item img {
@@ -635,12 +576,55 @@
       position: absolute;
       left: 12px;
       bottom: 12px;
+      z-index: 2;
       padding: 7px 11px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.9);
-      color: var(--primary);
+      background: rgba(255,255,255,0.92);
+      color: var(--primary-dark);
       font-size: 0.78rem;
       font-weight: 800;
+    }
+
+    .gallery-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .gallery-note {
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 18px 0 24px;
+      padding: 10px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.66);
+      border: 1px solid rgba(223, 186, 203, 0.35);
+    }
+
+    .filter-btn {
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.94);
+      color: var(--text-main);
+      border: 1px solid rgba(223, 186, 203, 0.42);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 14px 28px rgba(216, 100, 150, 0.2);
     }
 
     .gallery {
@@ -650,8 +634,8 @@
     }
 
     .photo-card {
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(255,255,255,0.82);
       border-radius: 26px;
       overflow: hidden;
       box-shadow: var(--shadow-soft);
@@ -668,6 +652,15 @@
       height: 300px;
       overflow: hidden;
       background: linear-gradient(135deg, #ffe0ec, #fff8fb);
+    }
+
+    .photo-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 45%;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(53, 32, 46, 0.18));
+      pointer-events: none;
     }
 
     .photo-wrapper img {
@@ -687,10 +680,11 @@
       position: absolute;
       top: 14px;
       left: 14px;
+      z-index: 2;
       padding: 8px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,0.92);
-      color: var(--primary);
+      color: var(--primary-dark);
       font-size: 0.8rem;
       font-weight: 800;
     }
@@ -704,18 +698,44 @@
       margin-bottom: 8px;
     }
 
-    .empty-message {
-      text-align: center;
-      display: none;
-      padding: 18px;
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
     }
 
-    footer {
-      padding: 12px 0 40px;
+    .memory-box h4 {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .memory-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .memory-box::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--primary), rgba(216, 100, 150, 0.12));
+    }
+
+    .empty-message {
+      display: none;
+      text-align: center;
+      padding: 18px;
     }
 
     .footer-card {
       text-align: center;
+      background: rgba(255,255,255,0.84);
+    }
+
+    footer {
+      padding: 12px 0 40px;
     }
 
     .lightbox {
@@ -724,9 +744,10 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 24px;
       background: rgba(34, 10, 22, 0.9);
-      z-index: 100;
+      z-index: 120;
+      backdrop-filter: blur(10px);
     }
 
     .lightbox.active {
@@ -753,22 +774,23 @@
       color: #ffffff;
       margin-top: 14px;
       line-height: 1.7;
+      font-size: 0.98rem;
     }
 
     .close-btn {
       position: absolute;
       top: -12px;
       right: 0;
-      width: 44px;
-      height: 44px;
+      width: 46px;
+      height: 46px;
       border: none;
       border-radius: 50%;
       background: #ffffff;
       color: #333;
-      font-size: 1.2rem;
+      font-size: 1.22rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: var(--shadow-soft);
+      box-shadow: var(--shadow-medium);
     }
 
     @media (max-width: 980px) {
@@ -776,7 +798,7 @@
         grid-template-columns: 1fr;
       }
 
-      .hero-card {
+      .glass-card {
         min-height: auto;
       }
 
@@ -788,9 +810,9 @@
 
     @media (max-width: 700px) {
       .top-nav {
+        border-radius: 26px;
         align-items: center;
-        justify-content: space-between;
-        border-radius: 24px;
+        flex-wrap: wrap;
       }
 
       .nav-toggle {
@@ -802,8 +824,13 @@
         width: 100%;
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;
-        padding-top: 8px;
+        gap: 10px;
+        margin-top: 4px;
+        padding: 14px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(223, 186, 203, 0.36);
+        box-shadow: var(--shadow-soft);
       }
 
       .nav-links.open {
@@ -813,14 +840,15 @@
       .nav-links a {
         width: 100%;
         text-align: center;
-        background: rgba(255,255,255,0.92);
+        background: rgba(255,255,255,0.94);
+        border: 1px solid rgba(223, 186, 203, 0.28);
       }
 
       .hero {
         padding-top: 36px;
       }
 
-      .hero-card,
+      .glass-card,
       .hero-side,
       .section-card,
       .quote-band,
@@ -828,11 +856,11 @@
         padding: 22px;
       }
 
-      .hero-card h1 {
+      .hero-content h1 {
         max-width: none;
       }
 
-      .overview-grid {
+      .hero-stats {
         grid-template-columns: 1fr;
       }
 
@@ -852,6 +880,14 @@
       .photo-wrapper {
         height: 240px;
       }
+
+      .controls {
+        justify-content: stretch;
+      }
+
+      .filter-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -866,65 +902,75 @@
     <span>❤</span>
   </div>
 
-  <nav class="top-nav">
-    <div class="brand">❤ Our Love Album</div>
-    <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-    <div class="nav-links" id="navLinks">
-      <a href="#home">Home</a>
-      <a href="#access">Access</a>
-      <a href="#upload">Upload</a>
-      <a href="#pictures">Pictures</a>
-      <a href="#gallery-section">Gallery</a>
-      <a href="#notes">Notes</a>
-    </div>
-  </nav>
+  <div class="top-nav-wrap">
+    <nav class="top-nav">
+      <div class="brand">
+        <span class="brand-icon">❤</span>
+        <span>Our Love Album</span>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#memories">Memories</a>
+        <a href="#pictures">Pictures</a>
+        <a href="#gallery-section">Gallery</a>
+        <a href="#notes">Notes</a>
+      </div>
+    </nav>
+  </div>
 
   <main class="container">
     <section class="hero" id="home">
       <div class="hero-grid">
-        <div class="hero-card">
-          <div class="eyebrow">❤ Made for our sweetest memories</div>
-          <h1>A gentle little home for all the moments we love most.</h1>
-          <p>
-            This space is made to hold the little pieces of our story — the quiet dates, the happiest laughs, the warmest hugs, the simple days, and the memories we always want to come back to.
-          </p>
+        <div class="glass-card">
+          <div class="hero-content">
+            <div class="eyebrow">❤ Made for our sweetest memories</div>
+            <h1>A gentle little home for all the moments we love most.</h1>
+            <p>
+              This little album is our place for the quiet dates, happiest laughs, warmest hugs, little adventures, and all the simple memories that make our story feel beautiful.
+            </p>
 
-          <div class="hero-actions">
-            <a href="#gallery-section" class="primary">Open Album</a>
-            <a href="#upload" class="secondary">Add Memories</a>
-          </div>
+            <div class="hero-actions">
+              <a href="#gallery-section" class="primary">Open Album</a>
+              <a href="#notes" class="secondary">Read Our Notes</a>
+            </div>
 
-          <div class="overview-grid">
-            <div class="overview-card">
-              <strong>Made with Love</strong>
-              <span>A soft and beautiful place for the moments that matter most to us.</span>
-            </div>
-            <div class="overview-card">
-              <strong>Always Close</strong>
-              <span>A place we can open anytime to relive the memories we never want to lose.</span>
-            </div>
-            <div class="overview-card">
-              <strong>Full of Memories</strong>
-              <span>From our favorite dates to random happy moments, everything stays together here.</span>
+            <div class="hero-stats">
+              <div class="hero-stat">
+                <strong>Made with Love</strong>
+                <span>A soft and beautiful place for the moments that matter most to us.</span>
+              </div>
+              <div class="hero-stat">
+                <strong>Always Close</strong>
+                <span>A place we can open anytime to relive the memories we never want to lose.</span>
+              </div>
+              <div class="hero-stat">
+                <strong>Full of Memories</strong>
+                <span>From favorite dates to random happy moments, everything stays together here.</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="hero-card hero-side">
-          <div class="collage-grid">
-            <div class="collage-item tall">
-              <img src="images/photo1.jpg" alt="Featured memory" />
-              <div class="collage-label">A little collection of the moments that made us smile, laugh, and love even more.</div>
-            </div>
-            <div class="collage-item">
-              <img src="images/photo2.jpg" alt="Travel memory" />
-            </div>
-            <div class="collage-item">
-              <img src="images/photo3.jpg" alt="Happy memory" />
+        <div class="glass-card hero-side">
+          <div class="hero-side-content">
+            <div class="collage-grid">
+              <div class="collage-item tall">
+                <img src="images/photo1.jpg" alt="Featured memory" />
+                <div class="collage-label">A little collection of the moments that made us smile, laugh, and love even more.</div>
+              </div>
+              <div class="collage-item">
+                <img src="images/photo2.jpg" alt="Travel memory" />
+              </div>
+              <div class="collage-item">
+                <img src="images/photo3.jpg" alt="Happy memory" />
+              </div>
             </div>
           </div>
         </div>
@@ -935,103 +981,33 @@
       <p>“Every picture here holds a feeling, a memory, and a little reminder of how special our story is.”</p>
     </section>
 
-    <section class="section-card" id="access">
+    <section class="section-card" id="memories">
+      <div class="section-top-line"></div>
       <div class="section-header">
-        <div>
-          <span class="section-label">Access</span>
-          <h2>Just for us</h2>
-          <p>This little space is meant to stay personal, warm, and shared only between the two of us.</p>
+        <div class="section-title-wrap">
+          <span class="section-label">For Us</span>
+          <h2>Just our memories, kept close</h2>
+          <p>This album is simply a little place where our moments can stay safe, sweet, and close to our hearts.</p>
         </div>
       </div>
 
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3>Only Ours</h3>
-          <p>This album is a quiet little corner for our memories, our moments, and our story together.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Always With Us</h3>
-          <p>No matter where we are, this can be a place we return to whenever we miss a moment we shared.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Soft and Sweet</h3>
-          <p>Everything here is meant to feel gentle, warm, and full of love from the first glance.</p>
-        </div>
+      <div class="memory-ribbon">
+        <span class="quick-chip">❤ little dates</span>
+        <span class="quick-chip">❤ favorite laughs</span>
+        <span class="quick-chip">❤ soft moments</span>
+        <span class="quick-chip">❤ small adventures</span>
       </div>
 
-      <div class="form-shell">
-        <div class="auth-grid">
-          <div class="form-group">
-            <label for="authEmail">Email</label>
-            <input type="email" id="authEmail" placeholder="you@example.com" />
-          </div>
-
-          <div class="form-group">
-            <label for="authPassword">Password</label>
-            <input type="password" id="authPassword" placeholder="Enter password" />
-          </div>
-        </div>
-
-        <div class="button-row">          <button class="auth-btn" id="signInBtn">Sign In</button>
-          <button class="auth-btn hidden" id="signOutBtn">Sign Out</button>
-        </div>
+      <div class="simple-note">
+        <p><strong>A little reminder:</strong> this album grows whenever new photos are added to it, so it can keep becoming a bigger little home for our story.</p>
+        <p>Whenever you want to add new memories later, you only need to place a new picture in the images folder and add it to the list inside the code.</p>
       </div>
-
-      <div class="info-banner">
-        <p><strong>A little reminder:</strong> only the account we choose should be able to add new memories here, so this space stays personal, private, and just for us.</p>
-      </div>
-
-      <p class="status-message" id="authMessage"></p>
-      <div class="user-badge hidden" id="userBadge"></div>
-    </section>
-
-    <section class="section-card hidden" id="uploadSection">
-      <div class="section-header" id="upload">
-        <div>
-          <span class="section-label">Upload</span>
-          <h2>Add new memories</h2>
-          <p>Add more of our favorite moments here so our album keeps growing with every memory we make together.</p>
-        </div>
-      </div>
-
-      <div class="form-shell">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="photoCategory">Category</label>
-            <select id="photoCategory">
-              <option value="dates">Dates</option>
-              <option value="travel">Travel</option>
-              <option value="random">Random Moments</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="photoTitle">Photo Title</label>
-            <input type="text" id="photoTitle" placeholder="Example: Sunset Walk" />
-          </div>
-
-          <div class="form-group">
-            <label for="photoFiles">Choose Photo/s</label>
-            <input type="file" id="photoFiles" accept="image/*" multiple />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="photoCaption">Caption / Description</label>
-          <textarea id="photoCaption" placeholder="Write one caption for the uploaded photo or photos."></textarea>
-        </div>
-
-        <div class="button-row">
-          <button class="submit-btn" id="addPhotoBtn">Upload New Photo</button>
-        </div>
-      </div>
-
-      <p class="status-message" id="uploadMessage"></p>
     </section>
 
     <section class="section-card" id="pictures">
+      <div class="section-top-line"></div>
       <div class="section-header">
-        <div>
+        <div class="section-title-wrap">
           <span class="section-label">Pictures</span>
           <h2>All our pictures</h2>
           <p>A simple wall of memories where we can see all our favorite pictures together.</p>
@@ -1041,12 +1017,17 @@
     </section>
 
     <section class="section-card" id="gallery-section">
+      <div class="section-top-line"></div>
       <div class="section-header">
-        <div>
+        <div class="section-title-wrap">
           <span class="section-label">Gallery</span>
           <h2>Our memory gallery</h2>
-          <p>Browse through our dates, little adventures, and random happy moments whenever you want to look back on them.</p>
+          <p>Browse through our dates, little adventures, and random happy moments whenever we want to look back on them.</p>
         </div>
+      </div>
+
+      <div class="gallery-header-row">
+        <p class="gallery-note">Choose the kind of memory you want to look at first.</p>
       </div>
 
       <div class="controls">
@@ -1061,8 +1042,9 @@
     </section>
 
     <section class="section-card" id="notes">
+      <div class="section-top-line"></div>
       <div class="section-header">
-        <div>
+        <div class="section-title-wrap">
           <span class="section-label">Notes</span>
           <h2>Little notes from the heart</h2>
           <p>These little words make the album even more special, because some feelings deserve more than just a picture.</p>
@@ -1104,148 +1086,72 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import {
-      getAuth,
-      onAuthStateChanged,      signInWithEmailAndPassword,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      onSnapshot,
-      query,
-      orderBy,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-    import {
-      getStorage,
-      ref,
-      uploadBytes,
-      getDownloadURL
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "PASTE_YOUR_API_KEY",
-      authDomain: "PASTE_YOUR_AUTH_DOMAIN",
-      projectId: "PASTE_YOUR_PROJECT_ID",
-      storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
-      messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
-      appId: "PASTE_YOUR_APP_ID"
-    };
-
-    const ALLOWED_EMAILS = [
-      "aaronabello336@gmail.com"
-    ];
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    const defaultPhotos = [
+  <script>
+    const photos = [
       {
-        id: "default1",
         src: "images/photo1.jpg",
         title: "Coffee Date",
         caption: "One of our simple but favorite dates together.",
-        category: "dates",
-        source: "local"
+        category: "dates"
       },
       {
-        id: "default2",
         src: "images/photo2.jpg",
         title: "Beach Trip",
         caption: "A special day with sunshine, ocean breeze, and beautiful memories.",
-        category: "travel",
-        source: "local"
+        category: "travel"
       },
       {
-        id: "default3",
         src: "images/photo3.jpg",
         title: "Mirror Shot",
         caption: "A random photo that still became one of our favorites.",
-        category: "random",
-        source: "local"
+        category: "random"
       },
       {
-        id: "default4",
         src: "images/photo4.jpg",
         title: "Dinner Together",
         caption: "A nice meal and even better company.",
-        category: "dates",
-        source: "local"
+        category: "dates"
       },
       {
-        id: "default5",
         src: "images/photo5.jpg",
         title: "City Lights",
         caption: "One of our favorite evening moments together.",
-        category: "travel",
-        source: "local"
+        category: "travel"
       },
       {
-        id: "default6",
         src: "images/photo6.jpg",
         title: "Laughing Together",
         caption: "A candid moment full of joy.",
-        category: "random",
-        source: "local"
+        category: "random"
       },
       {
-        id: "default7",
         src: "images/photo7.jpg",
         title: "Sunset Memory",
         caption: "A calm and beautiful view we shared together.",
-        category: "dates",
-        source: "local"
+        category: "dates"
       },
       {
-        id: "default8",
         src: "images/photo8.jpg",
         title: "Adventure Day",
         caption: "A day full of excitement, photos, and memories.",
-        category: "travel",
-        source: "local"
+        category: "travel"
       }
     ];
 
-    let cloudPhotos = [];
     let currentFilter = "all";
-    let currentUser = null;
 
     const navToggle = document.getElementById("navToggle");
     const navLinks = document.getElementById("navLinks");
-
-    const authEmail = document.getElementById("authEmail");
-    const authPassword = document.getElementById("authPassword");    const signInBtn = document.getElementById("signInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
-    const authMessage = document.getElementById("authMessage");
-    const userBadge = document.getElementById("userBadge");
-    const uploadSection = document.getElementById("uploadSection");
-
-    const photoCategory = document.getElementById("photoCategory");
-    const photoTitle = document.getElementById("photoTitle");
-    const photoFiles = document.getElementById("photoFiles");
-    const photoCaption = document.getElementById("photoCaption");
-    const addPhotoBtn = document.getElementById("addPhotoBtn");
-    const uploadMessage = document.getElementById("uploadMessage");
-
+    const navAnchors = navLinks.querySelectorAll("a");
     const allPicturesGrid = document.getElementById("allPicturesGrid");
     const gallery = document.getElementById("gallery");
     const emptyMessage = document.getElementById("emptyMessage");
     const filterButtons = document.querySelectorAll(".filter-btn");
-
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = document.getElementById("lightboxImg");
     const lightboxCaption = document.getElementById("lightboxCaption");
     const closeBtn = document.getElementById("closeBtn");
-
-    function isAllowedEmail(email) {
-      return ALLOWED_EMAILS.includes(email.trim().toLowerCase());
-    }
+    const pageSections = document.querySelectorAll("main section[id]");
 
     function categoryLabel(category) {
       if (category === "dates") return "Dates";
@@ -1253,19 +1159,17 @@
       return "Random Moments";
     }
 
-    function safeFileName(fileName) {
-      return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
-    }
-
-    function getAllPhotos() {
-      return [...cloudPhotos, ...defaultPhotos];
-    }
-
     function openLightbox(src, title, caption) {
       lightbox.classList.add("active");
       lightboxImg.src = src;
       lightboxImg.alt = title;
       lightboxCaption.textContent = title + " — " + caption;
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("active");
+      document.body.style.overflow = "";
     }
 
     function createPictureOnlyItem(photo) {
@@ -1320,14 +1224,12 @@
 
       info.appendChild(title);
       info.appendChild(caption);
-
       card.appendChild(wrapper);
       card.appendChild(info);
       return card;
     }
 
     function renderAllPictures() {
-      const photos = getAllPhotos();
       allPicturesGrid.innerHTML = "";
       photos.forEach(function(photo) {
         allPicturesGrid.appendChild(createPictureOnlyItem(photo));
@@ -1335,7 +1237,6 @@
     }
 
     function renderFilteredAlbum() {
-      const photos = getAllPhotos();
       gallery.innerHTML = "";
 
       const filteredPhotos = currentFilter === "all"
@@ -1356,18 +1257,10 @@
       renderFilteredAlbum();
     }
 
-    function clearUploadForm() {
-      photoTitle.value = "";
-      photoCaption.value = "";
-      photoFiles.value = "";
-    }
-
-    function setAuthMessage(message) {
-      authMessage.textContent = message;
-    }
-
-    function setUploadMessage(message) {
-      uploadMessage.textContent = message;
+    function closeMobileMenu() {
+      navLinks.classList.remove("open");
+      navToggle.classList.remove("active");
+      navToggle.setAttribute("aria-expanded", "false");
     }
 
     navToggle.addEventListener("click", function() {
@@ -1377,118 +1270,22 @@
       navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
     });
 
-    navLinks.querySelectorAll("a").forEach(function(link) {
+    navAnchors.forEach(function(link) {
       link.addEventListener("click", function() {
-        navLinks.classList.remove("open");
-        navToggle.classList.remove("active");
-        navToggle.setAttribute("aria-expanded", "false");
+        closeMobileMenu();
       });
+    });
+
+    document.addEventListener("click", function(event) {
+      const clickedInsideNav = event.target.closest(".top-nav");
+      if (!clickedInsideNav && navLinks.classList.contains("open") && window.innerWidth <= 700) {
+        closeMobileMenu();
+      }
     });
 
     window.addEventListener("resize", function() {
       if (window.innerWidth > 700) {
-        navLinks.classList.remove("open");
-        navToggle.classList.remove("active");
-        navToggle.setAttribute("aria-expanded", "false");
-      }
-    });
-
-    signInBtn.addEventListener("click", async function() {
-      const email = authEmail.value.trim().toLowerCase();
-      const password = authPassword.value.trim();
-
-      if (!isAllowedEmail(email)) {
-        setAuthMessage("This email is not allowed for this album.");
-        return;
-      }
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        setAuthMessage("Signed in successfully.");
-      } catch (error) {
-        setAuthMessage(error.message);
-      }
-    });
-
-    signOutBtn.addEventListener("click", async function() {
-      try {
-        await signOut(auth);
-        setAuthMessage("Signed out.");
-      } catch (error) {
-        setAuthMessage(error.message);
-      }
-    });
-
-    onAuthStateChanged(auth, function(user) {
-      currentUser = user;
-
-      if (user && isAllowedEmail(user.email || "")) {
-        uploadSection.classList.remove("hidden");
-        signOutBtn.classList.remove("hidden");
-        userBadge.classList.remove("hidden");
-        userBadge.textContent = "Signed in as: " + user.email;
-      } else {
-        uploadSection.classList.add("hidden");
-        signOutBtn.classList.add("hidden");
-        userBadge.classList.add("hidden");
-        userBadge.textContent = "";
-      }
-    });
-
-    addPhotoBtn.addEventListener("click", async function() {
-      if (!currentUser) {
-        setUploadMessage("Please sign in first.");
-        return;
-      }
-
-      const titleValue = photoTitle.value.trim();
-      const captionValue = photoCaption.value.trim();
-      const categoryValue = photoCategory.value;
-      const selectedFiles = photoFiles.files;
-
-      if (titleValue === "") {
-        setUploadMessage("Please enter a photo title.");
-        return;
-      }
-
-      if (captionValue === "") {
-        setUploadMessage("Please enter a caption or description.");
-        return;
-      }
-
-      if (!selectedFiles || selectedFiles.length === 0) {
-        setUploadMessage("Please choose at least one image file.");
-        return;
-      }
-
-      try {
-        setUploadMessage("Uploading photo(s)...");
-
-        for (let index = 0; index < selectedFiles.length; index++) {
-          const file = selectedFiles[index];
-          const uniqueName = Date.now() + "_" + index + "_" + safeFileName(file.name);
-          const filePath = "albumImages/" + currentUser.uid + "/" + uniqueName;
-          const storageRef = ref(storage, filePath);
-
-          await uploadBytes(storageRef, file);
-          const downloadURL = await getDownloadURL(storageRef);
-
-          await addDoc(collection(db, "photos"), {
-            title: selectedFiles.length === 1 ? titleValue : titleValue + " " + (index + 1),
-            caption: captionValue,
-            category: categoryValue,
-            src: downloadURL,
-            filePath: filePath,
-            ownerUid: currentUser.uid,
-            ownerEmail: currentUser.email,
-            createdAt: serverTimestamp()
-          });
-        }
-
-        clearUploadForm();
-        setUploadMessage("New photo added successfully.");
-      } catch (error) {
-        setUploadMessage(error.message);
+        closeMobileMenu();
       }
     });
 
@@ -1504,39 +1301,38 @@
       });
     });
 
-    closeBtn.addEventListener("click", function() {
-      lightbox.classList.remove("active");
-    });
+    closeBtn.addEventListener("click", closeLightbox);
 
     lightbox.addEventListener("click", function(event) {
       if (event.target === lightbox) {
-        lightbox.classList.remove("active");
+        closeLightbox();
       }
     });
 
     document.addEventListener("keydown", function(event) {
       if (event.key === "Escape") {
-        lightbox.classList.remove("active");
+        closeLightbox();
       }
     });
 
-    const photoQuery = query(collection(db, "photos"), orderBy("createdAt", "desc"));
-
-    onSnapshot(photoQuery, function(snapshot) {
-      cloudPhotos = snapshot.docs.map(function(docItem) {
-        const data = docItem.data();
-        return {
-          id: docItem.id,
-          src: data.src,
-          title: data.title,
-          caption: data.caption,
-          category: data.category,
-          createdAt: data.createdAt,
-          source: "cloud"
-        };
+    const sectionObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          navAnchors.forEach(function(link) {
+            link.classList.remove("active");
+            if (link.getAttribute("href") === "#" + entry.target.id) {
+              link.classList.add("active");
+            }
+          });
+        }
       });
+    }, {
+      threshold: 0.35,
+      rootMargin: "-80px 0px -35% 0px"
+    });
 
-      renderAlbum();
+    pageSections.forEach(function(section) {
+      sectionObserver.observe(section);
     });
 
     renderAlbum();
