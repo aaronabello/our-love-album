@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Shared Private Photo Album</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #fff9fc;
+      --bg-soft: #fff2f7;
+      --surface: rgba(255, 255, 255, 0.9);
+      --surface-solid: #ffffff;
+      --surface-hover: #fff7fa;
+      --border: rgba(223, 186, 203, 0.55);
+      --border-strong: rgba(214, 100, 150, 0.22);
+      --text: #33212f;
+      --text-soft: #6c5565;
+      --primary: #d86496;
+      --primary-dark: #b94b7b;
+      --primary-soft: rgba(216, 100, 150, 0.12);
+      --success: #2f9b64;
+      --shadow-soft: 0 14px 36px rgba(99, 37, 67, 0.08);
+      --shadow-medium: 0 18px 40px rgba(99, 37, 67, 0.12);
+      --radius-xs: 12px;
+      --radius-sm: 16px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-xl: 34px;
+      --content-width: 1200px;
+      --space-1: 8px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 20px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 40px;
+      --space-8: 56px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 221, 236, 0.5), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255, 232, 241, 0.65), transparent 28%),
+        linear-gradient(180deg, var(--bg), var(--bg-soft));
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      z-index: -1;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    body::before {
+      width: 280px;
+      height: 280px;
+      top: -50px;
+      left: -80px;
+      background: rgba(247, 188, 214, 0.4);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      right: -90px;
+      bottom: -40px;
+      background: rgba(255, 226, 239, 0.72);
+    }
+
+    .floating-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .floating-hearts span {
+      position: absolute;
+      top: 100%;
+      color: rgba(216, 100, 150, 0.12);
+      font-size: 18px;
+      animation: floatHeart linear infinite;
+      user-select: none;
+    }
+
+    .floating-hearts span:nth-child(1) { left: 8%; animation-duration: 18s; animation-delay: 0s; }
+    .floating-hearts span:nth-child(2) { left: 20%; animation-duration: 22s; animation-delay: 4s; }
+    .floating-hearts span:nth-child(3) { left: 34%; animation-duration: 20s; animation-delay: 2s; }
+    .floating-hearts span:nth-child(4) { left: 48%; animation-duration: 24s; animation-delay: 5s; }
+    .floating-hearts span:nth-child(5) { left: 64%; animation-duration: 19s; animation-delay: 1s; }
+    .floating-hearts span:nth-child(6) { left: 78%; animation-duration: 21s; animation-delay: 6s; }
+    .floating-hearts span:nth-child(7) { left: 90%; animation-duration: 25s; animation-delay: 3s; }
+
+    @keyframes floatHeart {
+      from {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      to {
+        transform: translateY(-118vh) scale(1.25);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      width: min(var(--content-width), 92%);
+      margin: 0 auto;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 14px;
+      z-index: 60;
+      width: min(var(--content-width), 92%);
+      margin: 18px auto 0;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.76);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .brand {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      background: var(--primary-soft);
+      color: var(--primary);
+      outline: none;
+    }
+
+    .nav-toggle {
+      display: none;
+      width: 46px;
+      height: 46px;
+      border: 1px solid rgba(223, 186, 203, 0.45);
+      background: rgba(255,255,255,0.92);
+      border-radius: 50%;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .nav-toggle span {
+      width: 20px;
+      height: 2.5px;
+      background: var(--primary);
+      border-radius: 999px;
+      transition: 0.22s ease;
+      display: block;
+    }
+
+    .nav-toggle.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.active span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .hero {
+      padding: var(--space-8) 0 var(--space-6);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: var(--space-5);
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .section-card,
+    .footer-card,
+    .quote-band {
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.75);
+      box-shadow: var(--shadow-soft);
+      border-radius: var(--radius-xl);
+    }
+
+    .hero-card {
+      padding: 42px;
+      min-height: 440px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      top: -30px;
+      right: -40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 220, 234, 0.95), rgba(255, 220, 234, 0));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 10px 14px;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .hero-card h1 {
+      font-size: clamp(2.2rem, 5vw, 4.3rem);
+      line-height: 1.05;
+      max-width: 11ch;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-card p {
+      color: var(--text-soft);
+      max-width: 620px;
+      line-height: 1.8;
+      font-size: 1.02rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .hero-actions a,
+    .auth-btn,
+    .submit-btn,
+    .filter-btn {
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.22s ease;
+      border-radius: 999px;
+    }
+
+    .hero-actions a,
+    .auth-btn,
+    .submit-btn {
+      text-decoration: none;
+      padding: 14px 20px;
+    }
+
+    .hero-actions a.primary,
+    .auth-btn,
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #ffffff;
+      box-shadow: 0 12px 24px rgba(216, 100, 150, 0.24);
+    }
+
+    .hero-actions a.secondary {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .hero-actions a:hover,
+    .auth-btn:hover,
+    .submit-btn:hover,
+    .filter-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .overview-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.76);
+      border: 1px solid rgba(223, 186, 203, 0.35);
+    }
+
+    .overview-card strong {
+      display: block;
+      color: var(--primary);
+      font-size: 1.08rem;
+      margin-bottom: 6px;
+    }
+
+    .overview-card span {
+      color: var(--text-soft);
+      font-size: 0.93rem;
+      line-height: 1.6;
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .collage-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .collage-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, #ffe5ef, #fff7fb);
+      min-height: 190px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .collage-item.tall {
+      grid-row: span 2;
+      min-height: 394px;
+    }
+
+    .collage-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .collage-label {
+      position: absolute;
+      inset: auto 12px 12px 12px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.88);
+      color: var(--text);
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+      line-height: 1.5;
+    }
+
+    .section-card,
+    .quote-band,
+    .footer-card {
+      padding: 30px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .section-label {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: inline-block;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-header p,
+    .section-card p,
+    .quote-band p,
+    .feature-card p,
+    .memory-box p,
+    .form-helper,
+    .photo-info p,
+    .empty-message,
+    .footer-card {
+      color: var(--text-soft);
+      line-height: 1.75;
+    }
+
+    .quote-band {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,241,247,0.96));
+    }
+
+    .quote-band p {
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: clamp(1.06rem, 2vw, 1.28rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .feature-grid,
+    .auth-grid,
+    .form-grid,
+    .memory-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .auth-grid,
+    .form-grid,
+    .memory-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .feature-card,
+    .memory-box,
+    .info-banner {
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(223, 186, 203, 0.45);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .feature-card h3,
+    .memory-box h4 {
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .form-shell {
+      display: grid;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.94);
+      color: var(--text);
+      font-size: 0.96rem;
+      outline: none;
+      transition: 0.18s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: rgba(216, 100, 150, 0.65);
+      box-shadow: 0 0 0 4px rgba(216, 100, 150, 0.12);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .info-banner {
+      background: linear-gradient(135deg, rgba(255,248,251,0.95), rgba(255,255,255,0.96));
+      margin-top: 18px;
+    }
+
+    .status-message {
+      margin-top: 14px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.6;
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 14px;
+      padding: 11px 16px;
+      background: rgba(236,255,243,0.95);
+      color: var(--success);
+      border-radius: 999px;
+      border: 1px solid rgba(128, 210, 164, 0.45);
+      font-weight: 800;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0 24px;
+    }
+
+    .filter-btn {
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.92);
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(223, 186, 203, 0.35);
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .picture-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+    }
+
+    .picture-item {
+      position: relative;
+      height: 198px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe5ef, #fff7fb);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .picture-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.34s ease;
+    }
+
+    .picture-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .picture-badge {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+      gap: 22px;
+    }
+
+    .photo-card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(255,255,255,0.78);
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.28s ease, box-shadow 0.28s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-7px);
+      box-shadow: var(--shadow-medium);
+    }
+
+    .photo-wrapper {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #ffe0ec, #fff8fb);
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.38s ease;
+    }
+
+    .photo-card:hover .photo-wrapper img {
+      transform: scale(1.05);
+    }
+
+    .tag {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .photo-info {
+      padding: 18px 18px 20px;
+    }
+
+    .photo-info h3 {
+      font-size: 1.08rem;
+      margin-bottom: 8px;
+    }
+
+    .empty-message {
+      text-align: center;
+      display: none;
+      padding: 18px;
+    }
+
+    footer {
+      padding: 12px 0 40px;
+    }
+
+    .footer-card {
+      text-align: center;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(34, 10, 22, 0.9);
+      z-index: 100;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      width: 100%;
+      max-width: 980px;
+      position: relative;
+      text-align: center;
+    }
+
+    .lightbox img {
+      width: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.32);
+    }
+
+    .lightbox-caption {
+      color: #ffffff;
+      margin-top: 14px;
+      line-height: 1.7;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: -12px;
+      right: 0;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #333;
+      font-size: 1.2rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        min-height: auto;
+      }
+
+      .collage-item.tall {
+        min-height: 260px;
+        grid-row: span 1;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .top-nav {
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 24px;
+      }
+
+      .nav-toggle {
+        display: inline-flex;
+      }
+
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding-top: 8px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        text-align: center;
+        background: rgba(255,255,255,0.92);
+      }
+
+      .hero {
+        padding-top: 36px;
+      }
+
+      .hero-card,
+      .hero-side,
+      .section-card,
+      .quote-band,
+      .footer-card {
+        padding: 22px;
+      }
+
+      .hero-card h1 {
+        max-width: none;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .collage-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .collage-item,
+      .collage-item.tall {
+        min-height: 220px;
+      }
+
+      .picture-item {
+        height: 170px;
+      }
+
+      .photo-wrapper {
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-hearts" aria-hidden="true">
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+    <span>❤</span>
+  </div>
+
+  <nav class="top-nav">
+    <div class="brand">❤ Our Love Album</div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#access">Access</a>
+      <a href="#upload">Upload</a>
+      <a href="#pictures">Pictures</a>
+      <a href="#gallery-section">Gallery</a>
+      <a href="#notes">Notes</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero" id="home">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="eyebrow">❤ Made for our sweetest memories</div>
+          <h1>A gentle little home for all the moments we love most.</h1>
+          <p>
+            This space is made to hold the little pieces of our story — the quiet dates, the happiest laughs, the warmest hugs, the simple days, and the memories we always want to come back to.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#gallery-section" class="primary">Open Album</a>
+            <a href="#upload" class="secondary">Add Memories</a>
+          </div>
+
+          <div class="overview-grid">
+            <div class="overview-card">
+              <strong>Made with Love</strong>
+              <span>A soft and beautiful place for the moments that matter most to us.</span>
+            </div>
+            <div class="overview-card">
+              <strong>Always Close</strong>
+              <span>A place we can open anytime to relive the memories we never want to lose.</span>
+            </div>
+            <div class="overview-card">
+              <strong>Full of Memories</strong>
+              <span>From our favorite dates to random happy moments, everything stays together here.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card hero-side">
+          <div class="collage-grid">
+            <div class="collage-item tall">
+              <img src="images/photo1.jpg" alt="Featured memory" />
+              <div class="collage-label">A little collection of the moments that made us smile, laugh, and love even more.</div>
+            </div>
+            <div class="collage-item">
+              <img src="images/photo2.jpg" alt="Travel memory" />
+            </div>
+            <div class="collage-item">
+              <img src="images/photo3.jpg" alt="Happy memory" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quote-band">
+      <p>“Every picture here holds a feeling, a memory, and a little reminder of how special our story is.”</p>
+    </section>
+
+    <section class="section-card" id="access">
+      <div class="section-header">
+        <div>
+          <span class="section-label">Access</span>
+          <h2>Just for us</h2>
+          <p>This little space is meant to stay personal, warm, and shared only between the two of us.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h3>Only Ours</h3>
+          <p>This album is a quiet little corner for our memories, our moments, and our story together.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Always With Us</h3>
+          <p>No matter where we are, this can be a place we return to whenever we miss a moment we shared.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Soft and Sweet</h3>
+          <p>Everything here is meant to feel gentle, warm, and full of love from the first glance.</p>
+        </div>
+      </div>
+
+      <div class="form-shell">
+        <div class="auth-grid">
+          <div class="form-group">
+            <label for="authEmail">Email</label>
+            <input type="email" id="authEmail" placeholder="you@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="authPassword">Password</label>
+            <input type="password" id="authPassword" placeholder="Enter password" />
+          </div>
+        </div>
+
+        <div class="button-row">          <button class="auth-btn" id="signInBtn">Sign In</button>
+          <button class="auth-btn hidden" id="signOutBtn">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="info-banner">
+        <p><strong>A little reminder:</strong> only the account we choose should be able to add new memories here, so this space stays personal, private, and just for us.</p>
+      </div>
+
+      <p class="status-message" id="authMessage"></p>
+      <div class="user-badge hidden" id="userBadge"></div>
+    </section>
+
+    <section class="section-card hidden" id="uploadSection">
+      <div class="section-header" id="upload">
+        <div>
+          <span class="section-label">Upload</span>
+          <h2>Add new memories</h2>
+          <p>Add more of our favorite moments here so our album keeps growing with every memory we make together.</p>
+        </div>
+      </div>
+
+      <div class="form-shell">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="photoCategory">Category</label>
+            <select id="photoCategory">
+              <option value="dates">Dates</option>
+              <option value="travel">Travel</option>
+              <option value="random">Random Moments</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="photoTitle">Photo Title</label>
+            <input type="text" id="photoTitle" placeholder="Example: Sunset Walk" />
+          </div>
+
+          <div class="form-group">
+            <label for="photoFiles">Choose Photo/s</label>
+            <input type="file" id="photoFiles" accept="image/*" multiple />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="photoCaption">Caption / Description</label>
+          <textarea id="photoCaption" placeholder="Write one caption for the uploaded photo or photos."></textarea>
+        </div>
+
+        <div class="button-row">
+          <button class="submit-btn" id="addPhotoBtn">Upload New Photo</button>
+        </div>
+      </div>
+
+      <p class="status-message" id="uploadMessage"></p>
+    </section>
+
+    <section class="section-card" id="pictures">
+      <div class="section-header">
+        <div>
+          <span class="section-label">Pictures</span>
+          <h2>All our pictures</h2>
+          <p>A simple wall of memories where we can see all our favorite pictures together.</p>
+        </div>
+      </div>
+      <div class="picture-grid" id="allPicturesGrid"></div>
+    </section>
+
+    <section class="section-card" id="gallery-section">
+      <div class="section-header">
+        <div>
+          <span class="section-label">Gallery</span>
+          <h2>Our memory gallery</h2>
+          <p>Browse through our dates, little adventures, and random happy moments whenever you want to look back on them.</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="dates">Dates</button>
+        <button class="filter-btn" data-filter="travel">Travel</button>
+        <button class="filter-btn" data-filter="random">Random Moments</button>
+      </div>
+
+      <div class="gallery" id="gallery"></div>
+      <p class="empty-message" id="emptyMessage">No photos found in this category yet.</p>
+    </section>
+
+    <section class="section-card" id="notes">
+      <div class="section-header">
+        <div>
+          <span class="section-label">Notes</span>
+          <h2>Little notes from the heart</h2>
+          <p>These little words make the album even more special, because some feelings deserve more than just a picture.</p>
+        </div>
+      </div>
+
+      <div class="memory-grid">
+        <div class="memory-box">
+          <h4>Our First Favorite Place</h4>
+          <p>Replace this with the place that became special for both of you and why it still means a lot today.</p>
+        </div>
+        <div class="memory-box">
+          <h4>Funniest Memory</h4>
+          <p>Write the story that always makes both of you laugh every time you remember it.</p>
+        </div>
+        <div class="memory-box">
+          <h4>Special Date</h4>
+          <p>Add your anniversary, a meaningful day, or the moment you both never want to forget.</p>
+        </div>
+        <div class="memory-box">
+          <h4>Love Message</h4>
+          <p>Thank you for being part of my life, my peace, my comfort, and my happiest memories.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <div class="footer-card">
+      Made with love for the moments we never want to forget, so we can always come back to them and feel them all over again.
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="close-btn" id="closeBtn">×</button>
+      <img id="lightboxImg" src="" alt="Expanded memory" />
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      onSnapshot,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytes,
+      getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "PASTE_YOUR_API_KEY",
+      authDomain: "PASTE_YOUR_AUTH_DOMAIN",
+      projectId: "PASTE_YOUR_PROJECT_ID",
+      storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
+      messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID",
+      appId: "PASTE_YOUR_APP_ID"
+    };
+
+    const ALLOWED_EMAILS = [
+      "your-email@example.com",
+      "partner-email@example.com"
+    ];
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const defaultPhotos = [
+      {
+        id: "default1",
+        src: "images/photo1.jpg",
+        title: "Coffee Date",
+        caption: "One of our simple but favorite dates together.",
+        category: "dates",
+        source: "local"
+      },
+      {
+        id: "default2",
+        src: "images/photo2.jpg",
+        title: "Beach Trip",
+        caption: "A special day with sunshine, ocean breeze, and beautiful memories.",
+        category: "travel",
+        source: "local"
+      },
+      {
+        id: "default3",
+        src: "images/photo3.jpg",
+        title: "Mirror Shot",
+        caption: "A random photo that still became one of our favorites.",
+        category: "random",
+        source: "local"
+      },
+      {
+        id: "default4",
+        src: "images/photo4.jpg",
+        title: "Dinner Together",
+        caption: "A nice meal and even better company.",
+        category: "dates",
+        source: "local"
+      },
+      {
+        id: "default5",
+        src: "images/photo5.jpg",
+        title: "City Lights",
+        caption: "One of our favorite evening moments together.",
+        category: "travel",
+        source: "local"
+      },
+      {
+        id: "default6",
+        src: "images/photo6.jpg",
+        title: "Laughing Together",
+        caption: "A candid moment full of joy.",
+        category: "random",
+        source: "local"
+      },
+      {
+        id: "default7",
+        src: "images/photo7.jpg",
+        title: "Sunset Memory",
+        caption: "A calm and beautiful view we shared together.",
+        category: "dates",
+        source: "local"
+      },
+      {
+        id: "default8",
+        src: "images/photo8.jpg",
+        title: "Adventure Day",
+        caption: "A day full of excitement, photos, and memories.",
+        category: "travel",
+        source: "local"
+      }
+    ];
+
+    let cloudPhotos = [];
+    let currentFilter = "all";
+    let currentUser = null;
+
+    const navToggle = document.getElementById("navToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");    const signInBtn = document.getElementById("signInBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+    const authMessage = document.getElementById("authMessage");
+    const userBadge = document.getElementById("userBadge");
+    const uploadSection = document.getElementById("uploadSection");
+
+    const photoCategory = document.getElementById("photoCategory");
+    const photoTitle = document.getElementById("photoTitle");
+    const photoFiles = document.getElementById("photoFiles");
+    const photoCaption = document.getElementById("photoCaption");
+    const addPhotoBtn = document.getElementById("addPhotoBtn");
+    const uploadMessage = document.getElementById("uploadMessage");
+
+    const allPicturesGrid = document.getElementById("allPicturesGrid");
+    const gallery = document.getElementById("gallery");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightboxImg");
+    const lightboxCaption = document.getElementById("lightboxCaption");
+    const closeBtn = document.getElementById("closeBtn");
+
+    function isAllowedEmail(email) {
+      return ALLOWED_EMAILS.includes(email.trim().toLowerCase());
+    }
+
+    function categoryLabel(category) {
+      if (category === "dates") return "Dates";
+      if (category === "travel") return "Travel";
+      return "Random Moments";
+    }
+
+    function safeFileName(fileName) {
+      return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+    }
+
+    function getAllPhotos() {
+      return [...cloudPhotos, ...defaultPhotos];
+    }
+
+    function openLightbox(src, title, caption) {
+      lightbox.classList.add("active");
+      lightboxImg.src = src;
+      lightboxImg.alt = title;
+      lightboxCaption.textContent = title + " — " + caption;
+    }
+
+    function createPictureOnlyItem(photo) {
+      const pictureItem = document.createElement("div");
+      pictureItem.className = "picture-item";
+
+      const image = document.createElement("img");
+      image.src = photo.src;
+      image.alt = photo.title;
+      image.addEventListener("click", function() {
+        openLightbox(photo.src, photo.title, photo.caption);
+      });
+
+      const badge = document.createElement("span");
+      badge.className = "picture-badge";
+      badge.textContent = categoryLabel(photo.category);
+
+      pictureItem.appendChild(image);
+      pictureItem.appendChild(badge);
+      return pictureItem;
+    }
+
+    function createAlbumCard(photo) {
+      const card = document.createElement("article");
+      card.className = "photo-card";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "photo-wrapper";
+
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = categoryLabel(photo.category);
+
+      const image = document.createElement("img");
+      image.src = photo.src;
+      image.alt = photo.title;
+      image.addEventListener("click", function() {
+        openLightbox(photo.src, photo.title, photo.caption);
+      });
+
+      wrapper.appendChild(tag);
+      wrapper.appendChild(image);
+
+      const info = document.createElement("div");
+      info.className = "photo-info";
+
+      const title = document.createElement("h3");
+      title.textContent = photo.title;
+
+      const caption = document.createElement("p");
+      caption.textContent = photo.caption;
+
+      info.appendChild(title);
+      info.appendChild(caption);
+
+      card.appendChild(wrapper);
+      card.appendChild(info);
+      return card;
+    }
+
+    function renderAllPictures() {
+      const photos = getAllPhotos();
+      allPicturesGrid.innerHTML = "";
+      photos.forEach(function(photo) {
+        allPicturesGrid.appendChild(createPictureOnlyItem(photo));
+      });
+    }
+
+    function renderFilteredAlbum() {
+      const photos = getAllPhotos();
+      gallery.innerHTML = "";
+
+      const filteredPhotos = currentFilter === "all"
+        ? photos
+        : photos.filter(function(photo) {
+            return photo.category === currentFilter;
+          });
+
+      filteredPhotos.forEach(function(photo) {
+        gallery.appendChild(createAlbumCard(photo));
+      });
+
+      emptyMessage.style.display = filteredPhotos.length === 0 ? "block" : "none";
+    }
+
+    function renderAlbum() {
+      renderAllPictures();
+      renderFilteredAlbum();
+    }
+
+    function clearUploadForm() {
+      photoTitle.value = "";
+      photoCaption.value = "";
+      photoFiles.value = "";
+    }
+
+    function setAuthMessage(message) {
+      authMessage.textContent = message;
+    }
+
+    function setUploadMessage(message) {
+      uploadMessage.textContent = message;
+    }
+
+    navToggle.addEventListener("click", function() {
+      navToggle.classList.toggle("active");
+      navLinks.classList.toggle("open");
+      const isOpen = navLinks.classList.contains("open");
+      navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+
+    navLinks.querySelectorAll("a").forEach(function(link) {
+      link.addEventListener("click", function() {
+        navLinks.classList.remove("open");
+        navToggle.classList.remove("active");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    window.addEventListener("resize", function() {
+      if (window.innerWidth > 700) {
+        navLinks.classList.remove("open");
+        navToggle.classList.remove("active");
+        navToggle.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    signInBtn.addEventListener("click", async function() {
+      const email = authEmail.value.trim().toLowerCase();
+      const password = authPassword.value.trim();
+
+      if (!isAllowedEmail(email)) {
+        setAuthMessage("This email is not allowed for this album.");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        setAuthMessage("Signed in successfully.");
+      } catch (error) {
+        setAuthMessage(error.message);
+      }
+    });
+
+    signOutBtn.addEventListener("click", async function() {
+      try {
+        await signOut(auth);
+        setAuthMessage("Signed out.");
+      } catch (error) {
+        setAuthMessage(error.message);
+      }
+    });
+
+    onAuthStateChanged(auth, function(user) {
+      currentUser = user;
+
+      if (user && isAllowedEmail(user.email || "")) {
+        uploadSection.classList.remove("hidden");
+        signOutBtn.classList.remove("hidden");
+        userBadge.classList.remove("hidden");
+        userBadge.textContent = "Signed in as: " + user.email;
+      } else {
+        uploadSection.classList.add("hidden");
+        signOutBtn.classList.add("hidden");
+        userBadge.classList.add("hidden");
+        userBadge.textContent = "";
+      }
+    });
+
+    addPhotoBtn.addEventListener("click", async function() {
+      if (!currentUser) {
+        setUploadMessage("Please sign in first.");
+        return;
+      }
+
+      const titleValue = photoTitle.value.trim();
+      const captionValue = photoCaption.value.trim();
+      const categoryValue = photoCategory.value;
+      const selectedFiles = photoFiles.files;
+
+      if (titleValue === "") {
+        setUploadMessage("Please enter a photo title.");
+        return;
+      }
+
+      if (captionValue === "") {
+        setUploadMessage("Please enter a caption or description.");
+        return;
+      }
+
+      if (!selectedFiles || selectedFiles.length === 0) {
+        setUploadMessage("Please choose at least one image file.");
+        return;
+      }
+
+      try {
+        setUploadMessage("Uploading photo(s)...");
+
+        for (let index = 0; index < selectedFiles.length; index++) {
+          const file = selectedFiles[index];
+          const uniqueName = Date.now() + "_" + index + "_" + safeFileName(file.name);
+          const filePath = "albumImages/" + currentUser.uid + "/" + uniqueName;
+          const storageRef = ref(storage, filePath);
+
+          await uploadBytes(storageRef, file);
+          const downloadURL = await getDownloadURL(storageRef);
+
+          await addDoc(collection(db, "photos"), {
+            title: selectedFiles.length === 1 ? titleValue : titleValue + " " + (index + 1),
+            caption: captionValue,
+            category: categoryValue,
+            src: downloadURL,
+            filePath: filePath,
+            ownerUid: currentUser.uid,
+            ownerEmail: currentUser.email,
+            createdAt: serverTimestamp()
+          });
+        }
+
+        clearUploadForm();
+        setUploadMessage("New photo added successfully.");
+      } catch (error) {
+        setUploadMessage(error.message);
+      }
+    });
+
+    filterButtons.forEach(function(button) {
+      button.addEventListener("click", function() {
+        filterButtons.forEach(function(btn) {
+          btn.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        currentFilter = button.getAttribute("data-filter");
+        renderFilteredAlbum();
+      });
+    });
+
+    closeBtn.addEventListener("click", function() {
+      lightbox.classList.remove("active");
+    });
+
+    lightbox.addEventListener("click", function(event) {
+      if (event.target === lightbox) {
+        lightbox.classList.remove("active");
+      }
+    });
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        lightbox.classList.remove("active");
+      }
+    });
+
+    const photoQuery = query(collection(db, "photos"), orderBy("createdAt", "desc"));
+
+    onSnapshot(photoQuery, function(snapshot) {
+      cloudPhotos = snapshot.docs.map(function(docItem) {
+        const data = docItem.data();
+        return {
+          id: docItem.id,
+          src: data.src,
+          title: data.title,
+          caption: data.caption,
+          category: data.category,
+          createdAt: data.createdAt,
+          source: "cloud"
+        };
+      });
+
+      renderAlbum();
+    });
+
+    renderAlbum();
+  </script>
+</body>
+</html>
