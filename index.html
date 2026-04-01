@@ -962,17 +962,18 @@
           <div class="hero-side-content">
             <div class="collage-grid">
               <div class="collage-item tall">
-                <img src="images/photo1.jpg" alt="Featured memory" />
+                <img id="heroImageMain" src="" alt="Featured memory" />
                 <div class="collage-label">A little collection of the moments that made us smile, laugh, and love even more.</div>
               </div>
               <div class="collage-item">
-                <img src="images/photo2.jpg" alt="Travel memory" />
+                <img id="heroImageSideOne" src="" alt="Lovely memory" />
               </div>
               <div class="collage-item">
-                <img src="images/photo3.jpg" alt="Happy memory" />
+                <img id="heroImageSideTwo" src="" alt="Happy memory" />
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </section>
@@ -1047,22 +1048,22 @@
         <div class="section-title-wrap">
           <span class="section-label">Notes</span>
           <h2>Little notes from the heart</h2>
-          <p>These little words make the album even more special, because some feelings deserve more than just a picture.</p>
+          <p>Some memories are too precious for just a picture, so these little words are here to keep the feelings close too.</p>
         </div>
       </div>
 
       <div class="memory-grid">
         <div class="memory-box">
           <h4>Our First Favorite Place</h4>
-          <p>Replace this with the place that became special for both of you and why it still means a lot today.</p>
+          <p>That little place where we shared quiet moments, soft laughter, and the kind of happiness that made everything feel warm and special.</p>
         </div>
         <div class="memory-box">
           <h4>Funniest Memory</h4>
-          <p>Write the story that always makes both of you laugh every time you remember it.</p>
+          <p>One of my favorite memories is the time we laughed so much over the smallest thing, and somehow that simple moment became one I never want to forget.</p>
         </div>
         <div class="memory-box">
           <h4>Special Date</h4>
-          <p>Add your anniversary, a meaningful day, or the moment you both never want to forget.</p>
+          <p>December 29, 2023 — Our anniversary, the day that reminds me how lucky I am to have you in my life.</p>
         </div>
         <div class="memory-box">
           <h4>Love Message</h4>
@@ -1110,6 +1111,9 @@
     let currentFilter = "all";
 
     const navToggle = document.getElementById("navToggle");
+    const heroImageMain = document.getElementById("heroImageMain");
+    const heroImageSideOne = document.getElementById("heroImageSideOne");
+    const heroImageSideTwo = document.getElementById("heroImageSideTwo");
     const navLinks = document.getElementById("navLinks");
     const navAnchors = navLinks.querySelectorAll("a");
     const allPicturesGrid = document.getElementById("allPicturesGrid");
@@ -1139,6 +1143,32 @@
     function closeLightbox() {
       lightbox.classList.remove("active");
       document.body.style.overflow = "";
+    }
+
+    function getRandomPhotos(count) {
+      const shuffledPhotos = [...photos].sort(function() {
+        return Math.random() - 0.5;
+      });
+
+      return shuffledPhotos.slice(0, Math.min(count, shuffledPhotos.length));
+    }
+
+    function renderHeroCollage() {
+      const chosenPhotos = getRandomPhotos(3);
+      const fallbackPhoto = photos[0] || null;
+      const collageImages = [heroImageMain, heroImageSideOne, heroImageSideTwo];
+
+      collageImages.forEach(function(imageElement, index) {
+        const photo = chosenPhotos[index] || photos[index] || fallbackPhoto;
+
+        if (photo) {
+          imageElement.src = photo.src;
+          imageElement.alt = photo.title;
+          imageElement.addEventListener("click", function() {
+            openLightbox(photo.src, photo.title, photo.caption);
+          });
+        }
+      });
     }
 
     function createPictureOnlyItem(photo) {
@@ -1304,6 +1334,7 @@
       sectionObserver.observe(section);
     });
 
+    renderHeroCollage();
     renderAlbum();
   </script>
 </body>
