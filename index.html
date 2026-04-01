@@ -1087,56 +1087,32 @@
   </div>
 
   <script>
-    const photos = [
-      {
-        src: "images/photo1.jpg",
-        title: "Coffee Date",
-        caption: "One of our simple but favorite dates together.",
-        category: "dates"
-      },
-      {
-        src: "images/photo2.jpg",
-        title: "Beach Trip",
-        caption: "A special day with sunshine, ocean breeze, and beautiful memories.",
-        category: "travel"
-      },
-      {
-        src: "images/photo3.jpg",
-        title: "Mirror Shot",
-        caption: "A random photo that still became one of our favorites.",
-        category: "random"
-      },
-      {
-        src: "images/photo4.jpg",
-        title: "Dinner Together",
-        caption: "A nice meal and even better company.",
-        category: "dates"
-      },
-      {
-        src: "images/photo5.jpg",
-        title: "City Lights",
-        caption: "One of our favorite evening moments together.",
-        category: "travel"
-      },
-      {
-        src: "images/photo6.jpg",
-        title: "Laughing Together",
-        caption: "A candid moment full of joy.",
-        category: "random"
-      },
-      {
-        src: "images/photo7.jpg",
-        title: "Sunset Memory",
-        caption: "A calm and beautiful view we shared together.",
-        category: "dates"
-      },
-      {
-        src: "images/photo8.jpg",
-        title: "Adventure Day",
-        caption: "A day full of excitement, photos, and memories.",
-        category: "travel"
-      }
-    ];
+    const photos = [];
+
+    function addPhoto(fileName, title, caption, category) {
+      photos.push({
+        src: "images/" + fileName,
+        title: title,
+        caption: caption,
+        category: category
+      });
+    }
+
+    // =====================================================
+    // ADD NEW PHOTOS HERE
+    // FORMAT:
+    // addPhoto("filename.jpg", "Title", "Caption", "dates");
+    // CATEGORIES: "dates", "travel", "random"
+    // =====================================================
+
+    addPhoto("photo1.jpg", "Coffee Date", "One of our simple but favorite dates together.", "dates");
+    addPhoto("photo2.jpg", "Beach Trip", "A special day with sunshine, ocean breeze, and beautiful memories.", "travel");
+    addPhoto("photo3.jpg", "Mirror Shot", "A random photo that still became one of our favorites.", "random");
+    addPhoto("photo4.jpg", "Dinner Together", "A nice meal and even better company.", "dates");
+    addPhoto("photo5.jpg", "City Lights", "One of our favorite evening moments together.", "travel");
+    addPhoto("photo6.jpg", "Laughing Together", "A candid moment full of joy.", "random");
+    addPhoto("photo7.jpg", "Sunset Memory", "A calm and beautiful view we shared together.", "dates");
+    addPhoto("photo8.jpg", "Adventure Day", "A day full of excitement, photos, and memories.", "travel");
 
     let currentFilter = "all";
 
